@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Segmentation Simulator</title>
+    <link rel="stylesheet" href="CSS/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Segmentation Address Translation</h1>
+
+    <div class="input-section">
+        <label>Segment Number:</label>
+        <input type="number" id="segmentNumber" placeholder="Example: 1">
+
+        <label>Offset:</label>
+        <input type="number" id="offset" placeholder="Example: 120">
+
+        <label>Segment Table (Base,Limit per segment)</label>
+        <p style="font-size:12px;">Example: 1000-300, 2000-500, 3000-400</p>
+        <input type="text" id="segmentTable">
+
+        <button onclick="translateSeg()">Translate</button>
+    </div>
+
+    <div id="result"></div>
+
+    <br>
+    <a href="index.html">← Back to Home</a>
+</div>
+
+<script src="JS/segmentation.js"></script>
+</body>
+</html>

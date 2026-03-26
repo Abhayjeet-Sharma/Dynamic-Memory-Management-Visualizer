@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Advanced Paging Simulator</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Advanced Paging Simulation</h1>
+
+      <div class="input-section">
+        <label>Number of Programs:</label>
+        <input type="number" id="numPrograms" />
+
+        <label>Program Sizes (comma separated):</label>
+        <input type="text" id="programSizes" placeholder="10,6" />
+
+        <label>Page Size:</label>
+        <input type="number" id="pageSize" />
+
+        <label>Physical Memory Size:</label>
+        <input type="number" id="physicalMemory" />
+
+        <label>Reference String:</label>
+        <input type="text" id="refString" placeholder="0 1 2 3 4 5" />
+
+        <label>Algorithm:</label>
+        <select id="algorithm">
+          <option value="FIFO">FIFO</option>
+          <option value="LRU">LRU</option>
+        </select>
+
+        <button onclick="runPaging()">Run Simulation</button>
+      </div>
+
+      <div id="output"></div>
+
+      <br />
+      <a href="index.html">← Back</a>
+    </div>
+
+    <script src="JS/paging.js"></script>
+  </body>
+</html>
