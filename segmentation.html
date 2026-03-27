@@ -2,34 +2,210 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Segmentation Simulator</title>
-    <link rel="stylesheet" href="CSS/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #0f172a;
+            color: white;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            height: 100vh;
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .panel {
+            background: #1e293b;
+            border-radius: 10px;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        button {
+            padding: 8px 12px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #38bdf8;
+            cursor: pointer;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        .ram {
+            height: 90%;
+            border: 2px solid white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .block {
+            border-bottom: 1px solid black;
+            padding: 5px;
+            font-size: 14px;
+        }
+
+        .free {
+            background: #334155;
+        }
+
+        .segment {
+            background: #22c55e;
+            color: black;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid white;
+            padding: 5px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Segmentation Address Translation</h1>
 
-    <div class="input-section">
-        <label>Segment Number:</label>
-        <input type="number" id="segmentNumber" placeholder="Example: 1">
+    <!-- LEFT PANEL: PROCESS INPUT -->
+    <div class="panel">
+        <h2>Processes</h2>
+        <input type="text" id="processName" placeholder="Enter process (e.g. chrome.exe)">
+        <button onclick="addProcess()">Add Process</button>
 
-        <label>Offset:</label>
-        <input type="number" id="offset" placeholder="Example: 120">
-
-        <label>Segment Table (Base,Limit per segment)</label>
-        <p style="font-size:12px;">Example: 1000-300, 2000-500, 3000-400</p>
-        <input type="text" id="segmentTable">
-
-        <button onclick="translateSeg()">Translate</button>
+        <ul id="processList"></ul>
+        <a href="index.html">← Back to Home</a>
     </div>
 
-    <div id="result"></div>
+    <!-- CENTER PANEL: RAM VISUALIZATION -->
+    <div class="panel">
+        <h2>RAM</h2>
+        <div class="ram" id="ramBox">
+            <!-- Memory Blocks will appear here -->
+        </div>
+    </div>
 
-    <br>
-    <a href="index.html">← Back to Home</a>
+    <!-- RIGHT PANEL: SEGMENT TABLE -->
+    <div class="panel">
+        <h2>Segment Table</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Segment</th>
+                    <th>Base</th>
+                    <th>Limit</th>
+                </tr>
+            </thead>
+            <tbody id="segmentTable">
+                <!-- Filled dynamically -->
+            </tbody>
+        </table>
+    </div>
+
 </div>
 
-<script src="JS/segmentation.js"></script>
+<script>
+    let processes = [];
+
+    function addProcess() {
+        const name = document.getElementById("processName").value;
+        if (!name) return;
+
+        const segments = ["Code", "Data", "Heap", "Stack"];
+
+        const process = {
+            name: name,
+            segments: segments.map(seg => ({
+                name: seg,
+                base: Math.floor(Math.random() * 1000),
+                limit: Math.floor(Math.random() * 300) + 50
+            }))
+        };
+
+        processes.push(process);
+        renderProcesses();
+        renderRAM();
+    }
+
+    function renderProcesses() {
+        const list = document.getElementById("processList");
+        list.innerHTML = "";
+
+        processes.forEach((p, index) => {
+            const li = document.createElement("li");
+            li.textContent = p.name;
+            li.style.cursor = "pointer";
+            li.onclick = () => showSegmentTable(index);
+            list.appendChild(li);
+        });
+    }
+
+    function renderRAM() {
+        const ram = document.getElementById("ramBox");
+        ram.innerHTML = "";
+
+        processes.forEach((p, index) => {
+            p.segments.forEach(seg => {
+                const div = document.createElement("div");
+                div.className = "block segment";
+                div.textContent = p.name + " - " + seg.name;
+                div.onclick = () => showSegmentTable(index);
+                ram.appendChild(div);
+            });
+        });
+
+        // Free space blocks
+        for (let i = 0; i < 3; i++) {
+            const free = document.createElement("div");
+            free.className = "block free";
+            free.textContent = "Free Space";
+            ram.appendChild(free);
+        }
+    }
+    function showSegmentTable(index) {
+    const table = document.getElementById("segmentTable");
+
+    if (!table) {
+        console.error("segmentTable not found in HTML");
+        return;
+    }
+
+    table.innerHTML = "";
+
+    const segments = processes[index].segments;
+
+    segments.forEach(seg => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${seg.name}</td>
+            <td>${seg.base}</td>
+            <td>${seg.limit}</td>
+        `;
+
+        table.appendChild(row);
+    });
+}      
+</script>
+
 </body>
 </html>
