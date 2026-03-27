@@ -90,23 +90,31 @@
     <div class="panel">
         <h2>Processes</h2>
         <input type="text" id="processName" placeholder="Enter process (e.g. chrome.exe)">
+        <input type="number" id="processSize" placeholder="Total Size (MB)">
         <button onclick="addProcess()">Add Process</button>
 
+        <div style="margin-top:10px; font-size:14px;">
+            <strong>RAM:</strong> 2048 MB (Fixed)
+            <br>
+            <strong>Used:</strong> <span id="usedMem">0</span> MB
+            <br>
+            <strong>Free:</strong> <span id="freeMem">2048</span> MB
+        </div>
+
         <ul id="processList"></ul>
-        <a href="index.html">← Back to Home</a>
     </div>
 
     <!-- CENTER PANEL: RAM VISUALIZATION -->
     <div class="panel">
-        <h2>RAM</h2>
-        <div class="ram" id="ramBox">
+        <h2>RAM (0 → 2048 MB)</h2>
+        <div class="ram" id="ramBox" style="position:relative;">
             <!-- Memory Blocks will appear here -->
         </div>
     </div>
 
     <!-- RIGHT PANEL: SEGMENT TABLE -->
     <div class="panel">
-        <h2>Segment Table</h2>
+        <h2>Segment Table (Selected Process)</h2>
         <table>
             <thead>
                 <tr>
@@ -123,89 +131,7 @@
 
 </div>
 
-<script>
-    let processes = [];
-
-    function addProcess() {
-        const name = document.getElementById("processName").value;
-        if (!name) return;
-
-        const segments = ["Code", "Data", "Heap", "Stack"];
-
-        const process = {
-            name: name,
-            segments: segments.map(seg => ({
-                name: seg,
-                base: Math.floor(Math.random() * 1000),
-                limit: Math.floor(Math.random() * 300) + 50
-            }))
-        };
-
-        processes.push(process);
-        renderProcesses();
-        renderRAM();
-    }
-
-    function renderProcesses() {
-        const list = document.getElementById("processList");
-        list.innerHTML = "";
-
-        processes.forEach((p, index) => {
-            const li = document.createElement("li");
-            li.textContent = p.name;
-            li.style.cursor = "pointer";
-            li.onclick = () => showSegmentTable(index);
-            list.appendChild(li);
-        });
-    }
-
-    function renderRAM() {
-        const ram = document.getElementById("ramBox");
-        ram.innerHTML = "";
-
-        processes.forEach((p, index) => {
-            p.segments.forEach(seg => {
-                const div = document.createElement("div");
-                div.className = "block segment";
-                div.textContent = p.name + " - " + seg.name;
-                div.onclick = () => showSegmentTable(index);
-                ram.appendChild(div);
-            });
-        });
-
-        // Free space blocks
-        for (let i = 0; i < 3; i++) {
-            const free = document.createElement("div");
-            free.className = "block free";
-            free.textContent = "Free Space";
-            ram.appendChild(free);
-        }
-    }
-    function showSegmentTable(index) {
-    const table = document.getElementById("segmentTable");
-
-    if (!table) {
-        console.error("segmentTable not found in HTML");
-        return;
-    }
-
-    table.innerHTML = "";
-
-    const segments = processes[index].segments;
-
-    segments.forEach(seg => {
-        const row = document.createElement("tr");
-
-        row.innerHTML = `
-            <td>${seg.name}</td>
-            <td>${seg.base}</td>
-            <td>${seg.limit}</td>
-        `;
-
-        table.appendChild(row);
-    });
-}      
-</script>
+<script src="JS/segmentation.js"></script>
 
 </body>
 </html>
