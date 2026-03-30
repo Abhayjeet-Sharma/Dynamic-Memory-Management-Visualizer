@@ -1,41 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory Management Visualizer</title>
-    <link rel="stylesheet" href="CSS/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory Management Visualizer</title>
+
+<link rel="stylesheet" href="CSS/style.css">
+
+<!-- Particles.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+
+<style>
+/* Background container */
+#particles-js {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #0f172a;
+    z-index: -1;
+}
+
+/* Improve UI visibility */
+.container {
+    text-align: center;
+    padding-top: 80px;
+}
+
+h1 {
+    h1 {
+    font-size: 48px;   /* increased size */
+    font-weight: 700;
+    background: linear-gradient(90deg, #38bdf8, #22c55e);
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 15px;
+}
+}
+
+.subtitle {
+    color: #cbd5f5;
+    margin-bottom: 40px;
+}
+
+.menu {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 boxes per row */
+    gap: 30px;
+    justify-content: center;
+    max-width: 600px;
+    margin: auto;
+}
+
+.card {
+    background: rgba(30, 41, 59, 0.85);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    transition: 0.3s;
+    color: white;
+    text-decoration: none;
+    min-height: 150px;  /* makes box bigger */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.card:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 0 25px #38bdf8;
+}
+@media (max-width: 600px) {
+    .menu {
+        grid-template-columns: 1fr; /* 1 box per row on mobile */
+    }
+}
+</style>
+
 </head>
+
 <body>
 
-    <div class="container">
-        <h1>Dynamic Memory Management Visualizer</h1>
-        <p class="subtitle">
-            Simulate Paging, Segmentation, Virtual Memory and Page Replacement Algorithms
-        </p>
+<!-- Animated Background -->
+<div id="particles-js"></div>
 
-        <div class="menu">
-            <a href="paging.html" class="card">
-                <h2>Paging</h2>
-                <p>Simulate page tables and address translation</p>
-            </a>
+<div class="container">
+    <h1> Dynamic Memory Management Visualizer</h1>
 
-            <a href="segmentation.html" class="card">
-                <h2>Segmentation</h2>
-                <p>Visualize segment tables and memory mapping</p>
-            </a>
+    <p class="subtitle">
+        Simulate Paging, Segmentation, Virtual Memory & Page Replacement Algorithms
+    </p>
 
-            <a href="virtual.html" class="card">
-                <h2>Virtual Memory</h2>
-                <p>Understand logical to physical address mapping</p>
-            </a>
+    <div class="menu">
+        <a href="paging.html" class="card">
+            <h2>Paging</h2>
+            <p>Simulate page tables & address translation</p>
+        </a>
 
-            <a href="replacement.html" class="card">
-                <h2>Page Replacement</h2>
-                <p>Simulate FIFO & LRU algorithms</p>
-            </a>
-        </div>
+        <a href="segmentation.html" class="card">
+            <h2>Segmentation</h2>
+            <p>Visualize segment tables & memory mapping</p>
+        </a>
+
+        <a href="virtual.html" class="card">
+            <h2>Virtual Memory</h2>
+            <p>Logical → Physical mapping</p>
+        </a>
+
+        <a href="replacement.html" class="card">
+            <h2>Page Replacement</h2>
+            <p>FIFO & LRU simulation</p>
+        </a>
     </div>
+</div>
+
+<script>
+particlesJS("particles-js", {
+  "particles": {
+    "number": {
+      "value": 80
+    },
+    "color": {
+      "value": "#38bdf8"
+    },
+    "shape": {
+      "type": "circle"
+    },
+    "opacity": {
+      "value": 0.5
+    },
+    "size": {
+      "value": 3
+    },
+    "line_linked": {
+      "enable": true,
+      "distance": 150,
+      "color": "#38bdf8",
+      "opacity": 0.4,
+      "width": 1
+    },
+    "move": {
+      "enable": true,
+      "speed": 3
+    }
+  },
+  "interactivity": {
+    "events": {
+      "onhover": {
+        "enable": true,
+        "mode": "grab"
+      }
+    },
+    "modes": {
+      "grab": {
+        "distance": 200,
+        "line_linked": {
+          "opacity": 0.8
+        }
+      }
+    }
+  }
+});
+</script>
 
 </body>
 </html>
