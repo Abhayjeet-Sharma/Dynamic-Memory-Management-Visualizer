@@ -1,5 +1,4 @@
 function runPaging() {
-    // Read Inputs
     let numPrograms = parseInt(document.getElementById("numPrograms").value);
     let programSizes = document.getElementById("programSizes").value.split(",");
     let pageSize = parseInt(document.getElementById("pageSize").value);
@@ -7,37 +6,51 @@ function runPaging() {
     let refString = document.getElementById("refString").value.split(" ");
     let algorithm = document.getElementById("algorithm").value;
 
-    // Calculate Pages per Program
     let totalPages = 0;
-    let pagesPerProgram = [];
 
     for (let size of programSizes) {
         let pages = Math.ceil(parseInt(size) / pageSize);
-        pagesPerProgram.push(pages);
         totalPages += pages;
     }
 
-    // Calculate Frames
     let frames = Math.floor(physicalMemory / pageSize);
 
-    // Display Basic Info
     let output = `
-        <h3>Simulation Info</h3>
-        <p>Total Programs: ${numPrograms}</p>
-        <p>Total Pages: ${totalPages}</p>
-        <p>Total Frames: ${frames}</p>
-        <p>Page Size: ${pageSize}</p>
-        <hr>
+        <div class="simulation-info">
+            <h2>Simulation Info</h2>
+            <p>Total Programs: ${numPrograms}</p>
+            <p>Total Pages: ${totalPages}</p>
+            <p>Total Frames: ${frames}</p>
+            <p>Page Size: ${pageSize}</p>
+        </div>
     `;
 
-    // Run Algorithm
+    let tableData = "";
+
     if (algorithm === "FIFO") {
-        output += fifoSim(refString, frames);
+        tableData = fifoSim(refString, frames);
     } else {
-        output += lruSim(refString, frames);
+        tableData = lruSim(refString, frames);
     }
 
+    output += `
+        <h2>${algorithm} Simulation</h2>
+        <div class="table-container">
+            ${tableData}
+        </div>
+    `;
+
     document.getElementById("output").innerHTML = output;
+
+    // Animation
+    if (typeof gsap !== "undefined") {
+        gsap.from("table tr", {
+            opacity: 0,
+            y: 20,
+            duration: 0.3,
+            stagger: 0.05
+        });
+    }
 }
 
 
@@ -47,12 +60,12 @@ function fifoSim(refString, frames) {
     let pointer = 0;
     let faults = 0;
 
-    let table = "<h3>FIFO Simulation</h3>";
-    table += "<table><tr><th>Step</th><th>Page</th>";
+    let table = "<table><tr><th>Step</th><th>Page</th>";
 
     for (let i = 0; i < frames; i++) {
-        table += "<th>Frame " + (i+1) + "</th>";
+        table += "<th>F" + (i+1) + "</th>";
     }
+
     table += "<th>Status</th></tr>";
 
     refString.forEach((page, step) => {
@@ -73,12 +86,14 @@ function fifoSim(refString, frames) {
             table += "<td>" + (memory[i] || "-") + "</td>";
         }
 
-        table += "<td>" + status + "</td>";
+        let statusClass = status === "Fault" ? "fault" : "hit";
+
+        table += `<td class="${statusClass}">${status}</td>`;
         table += "</tr>";
     });
 
     table += "</table>";
-    table += "<p><b>Total Page Faults:</b> " + faults + "</p>";
+    table += `<h3 style="margin-top:20px;">🔥 Total Page Faults: ${faults}</h3>`;
 
     return table;
 }
@@ -90,12 +105,12 @@ function lruSim(refString, frames) {
     let recent = [];
     let faults = 0;
 
-    let table = "<h3>LRU Simulation</h3>";
-    table += "<table><tr><th>Step</th><th>Page</th>";
+    let table = "<table><tr><th>Step</th><th>Page</th>";
 
     for (let i = 0; i < frames; i++) {
-        table += "<th>Frame " + (i+1) + "</th>";
+        table += "<th>F" + (i+1) + "</th>";
     }
+
     table += "<th>Status</th></tr>";
 
     refString.forEach((page, step) => {
@@ -125,12 +140,20 @@ function lruSim(refString, frames) {
             table += "<td>" + (memory[i] || "-") + "</td>";
         }
 
-        table += "<td>" + status + "</td>";
+        let statusClass = status === "Fault" ? "fault" : "hit";
+
+        table += `<td class="${statusClass}">${status}</td>`;
         table += "</tr>";
     });
 
     table += "</table>";
-    table += "<p><b>Total Page Faults:</b> " + faults + "</p>";
+    table += `<h3 style="margin-top:20px;">🔥 Total Page Faults: ${faults}</h3>`;
 
     return table;
 }
+gsap.from("table tr", {
+  opacity: 0,
+  y: 20,
+  duration: 0.3,
+  stagger: 0.05
+});
